@@ -47,7 +47,8 @@ start_link(Options) ->
     mochiweb_socket_server:start_link(parse_options(Options)).
 
 loop(Socket, Body) ->
-    ok = mochiweb_socket:setopts(Socket, [{packet, http}]),
+    %% allow for large http packets
+    ok = mochiweb_socket:setopts(Socket, [{packet, http},{packet_size, 1024*8},{buffer, 1024*8}]),
     request(Socket, Body).
 
 request(Socket, Body) ->
